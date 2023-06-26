@@ -10,9 +10,9 @@ go
 
 --creacion de tablas
 create table Programadores(
-	Nombre_Entrada varchar(60) primary key,--unique not null, --probablemente esta debería ser la PK
+	Nombre_Entrada varchar(60), --primary key,--unique not null, --probablemente esta debería ser la PK
 	Codigo varchar(40) not null,
-	--primary key (Codigo, Nombre_Entrada)
+	primary key (Nombre_Entrada, Codigo)
 );
 go
 
@@ -33,8 +33,9 @@ create table Programas(
 	Descripcion varchar(60),
 	Num_Version varchar(20),
 	Fecha date,
-	Fk_Nombre_Entrada varchar(60) foreign key references Programadores(Nombre_Entrada) not null,
-	--Fk_CodProgramador varchar(40) foreign key references Programadores(Codigo) not null,
+	Fk_Nombre_Entrada varchar(60) not null,
+	Fk_CodProgramador varchar(40) not null,
+	foreign key (Fk_Nombre_Entrada, Fk_CodProgramador) references Programadores (Nombre_Entrada, Codigo),
 	Fk_ID_Lenguaje int foreign key references LenguajesProgramacion(ID) not null,
 	Consulta_DBMS bit
 );
@@ -69,10 +70,10 @@ insert Usuarios values('juana');
 insert Usuarios values('eduardo');
 insert Usuarios values('flor');
 
-insert Programas values('QuickSort', '1.0', '2023-04-20', 'DanielaBallon', 1, 0);
-insert Programas values('ABMC Productos', '0.8.1', '2023-05-02', 'mtrescher', 3, 1);
-insert Programas values('PartidoStats', '0.3', '2022-09-12', 'n1cond', 4, 1);
-insert Programas values('DNSCheck', '1.0', '2023-01-15', 'Matias-S1lva', 5, 0);
+insert Programas values('QuickSort', '1.0', '2023-04-20', 'DanielaBallon', 'dani123', 1, 0);
+insert Programas values('ABMC Productos', '0.8.1', '2023-05-02', 'mtrescher', 'marce123', 3, 1);
+insert Programas values('PartidoStats', '0.3', '2022-09-12', 'n1cond', 'nel123', 4, 1);
+insert Programas values('DNSCheck', '1.0', '2023-01-15', 'Matias-S1lva', 'mati123', 5, 0);
 
 insert Llamadas values (2, 1);
 insert Llamadas values (3, 1);
