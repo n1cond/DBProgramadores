@@ -10,9 +10,10 @@ go
 
 --creacion de tablas
 create table Programadores(
-	Nombre_Entrada varchar(60), --primary key,--unique not null, --probablemente esta debería ser la PK
-	Codigo varchar(40) not null,
-	primary key (Nombre_Entrada, Codigo)
+	ID int identity(1,1) primary key, --si utilizamos el id como clave primaria permitira que se pueda hacer una modificacion en el codigo o nombre de entrada en caso de error
+	Nombre_Entrada varchar(60) not null,
+	Codigo varchar(40) unique not null,
+	constraint ukprogramadores unique (Nombre_Entrada, Codigo)
 );
 go
 
@@ -31,7 +32,7 @@ go
 create table Programas(
 	ID int identity(1,1) primary key,
 	Descripcion varchar(60),
-	Num_Version varchar(20),
+	Num_Version varchar(20) not null,
 	Fecha date,
 	Fk_Nombre_Entrada varchar(60) not null,
 	Fk_CodProgramador varchar(40) not null,
@@ -44,13 +45,15 @@ go
 create table Llamadas(
 	Fk_ID_Llama int foreign key references Programas(ID) not null,
 	Fk_ID_EsLlamado int foreign key references Programas(ID) not null,
-	constraint ukID unique (Fk_ID_Llama, Fk_ID_EsLlamado)
+	constraint ukID unique (Fk_ID_Llama, Fk_ID_EsLlamado),
+	ID int identity(1,1) primary key
 );
 go
 
 create table Prog_Usu(
 	ID_Programa int foreign key references Programas(ID) not null,
-	ID_Usuario int foreign key references Usuarios(ID) not null
+	ID_Usuario int foreign key references Usuarios(ID) not null,
+	ID int identity(1,1) primary key
 );
 go
 
@@ -83,3 +86,4 @@ insert Prog_Usu values (2, 3);
 insert Prog_Usu values (3, 2);
 insert Prog_Usu values (4, 4);
 insert Prog_Usu values (1, 1);
+
