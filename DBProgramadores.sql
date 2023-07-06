@@ -83,3 +83,92 @@ insert Prog_Usu values (2, 3);
 insert Prog_Usu values (3, 2);
 insert Prog_Usu values (4, 4);
 insert Prog_Usu values (1, 1);
+
+--1 listar todos los programas
+select p.Num_Version, p.Descripcion, p.Fecha, l.Nombre as Lenguaje
+from Programas p 
+inner join LenguajesProgramacion l ON p.Fk_ID_Lenguaje = l.ID
+
+
+select Programas.Num_Version, Programas.Descripcion, Programas.Fecha, LenguajesProgramacion.Nombre
+from Programas 
+join LenguajesProgramacion  ON Programas.Fk_ID_Lenguaje = LenguajesProgramacion.ID
+
+
+--2 Listar todos los programas escritos entre el 1/1/22 hasta el 31/12/23.
+select * from Programas
+where fecha between '2022-01-01' and '2023-12-31'
+
+--3 Listar todos los programas escritos en el lenguaje de programación de código=1.
+select * from Programas
+where Fk_ID_Lenguaje = 1
+
+--4 Listar todos los programas escritos en javascript
+select p.Num_Version, l.Nombre as Lenguaje from Programas p 
+inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
+where l.Nombre = 'javascript'
+
+--5 Indicar la cantidad de programas escritos en Javascript:
+select l.nombre, count(*) total from Programas p 
+inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
+where l.Nombre = 'javascript'
+group by l.Nombre
+
+
+--6 Indicar la cantidad de programas escritos en cada lenguaje
+select l.nombre, count(*) total from Programas p 
+inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
+group by l.Nombre
+
+
+--7 Indicar la cantidad de programas escritos en cada lenguaje y que hayan sido escritos entre 01/01/2022 y 31/12/2022
+select l.nombre, fecha, count(*) total from Programas p
+inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
+where p.fecha between '2022-01-01' and '2023-12-31'
+group by l.Nombre, fecha
+
+--8 Indicar la cantidad de programas, agrupados por programa que no están escritos en PASCAL.
+select l.nombre, count(*) total from Programas p
+inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
+where l.Nombre <> 'Python'-- l.nombre not in ('pascal'), l.nombre not like '%pascal%'
+group by l.Nombre
+
+select * from Programas
+
+--9 Listar la cantidad de programas escritos por cada programador en forma ascendente por nombre
+select Nombre_Entrada, count(*) from Programas p 
+inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
+group by Nombre_Entrada
+order by Nombre_Entrada asc
+
+--10 Listar la cantidad de programas escritos por cada programador en forma ascendente por nombre durante el 2022
+select Nombre_Entrada, p.fecha, count(*) from Programas p 
+inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
+where year(p.fecha)= 2022
+group by Nombre_Entrada, p.fecha
+order by Nombre_Entrada asc
+
+--11 Cantidad de programas utilizados por cada usuario agrupados por nombre de usuario
+--se modifica la query ya que no existe el uso por cada usuario por:
+--cantidad de programas que consultan en la BD agrupado por nombre de usuario
+select Nombre_Entrada, count(*) from Programas p 
+inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
+where p.Consulta_DBMS = 1
+group by Nombre_Entrada
+
+--12 Indicar todos los programas que utiliza un usuario determinado, por ejemplo, 2
+--se modifica la query ya que no existe el uso por cada usuario por:
+--Indicar todos los programaas que fueron escritos por un usuario determinado
+select Nombre_Entrada, count(*) from Programas p 
+inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
+where p.Fk_CodProgramador = 'marce123'
+group by Nombre_Entrada
+
+
+--13 Indicar todos los programas con que interactúa un programa dado.
+--se modifica la query ya que no existe la interaccion de un programa con otro:
+--Indicar todos los programas que interactuan con la BD
+select p.* from Programas p 
+where p.Consulta_DBMS = 1
+
+
