@@ -149,26 +149,23 @@ group by Nombre_Entrada, p.fecha
 order by Nombre_Entrada asc
 
 --11 Cantidad de programas utilizados por cada usuario agrupados por nombre de usuario
---se modifica la query ya que no existe el uso por cada usuario por:
---cantidad de programas que consultan en la BD agrupado por nombre de usuario
-select Nombre_Entrada, count(*) from Programas p 
-inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
-where p.Consulta_DBMS = 1
-group by Nombre_Entrada
+select u.Nombre_Entrada 'Nombre Usuario', count(*) as Programas from Prog_Usu pu
+inner join Programas p on pu.ID_Programa = p.ID
+inner join Usuarios u on pu.ID_Usuario = u.ID
+where pu.ID_Usuario = u.ID
+group by u.Nombre_Entrada
 
 --12 Indicar todos los programas que utiliza un usuario determinado, por ejemplo, 2
---se modifica la query ya que no existe el uso por cada usuario por:
---Indicar todos los programaas que fueron escritos por un usuario determinado
-select Nombre_Entrada, count(*) from Programas p 
-inner join Programadores pr on p.Fk_CodProgramador = pr.Codigo and p.Fk_Nombre_Entrada = pr.Nombre_Entrada
-where p.Fk_CodProgramador = 'marce123'
-group by Nombre_Entrada
+select u.Nombre_Entrada 'Nombre Usuario', count(*) as Programas from Prog_Usu pu
+inner join Programas p on pu.ID_Programa = p.ID
+inner join Usuarios u on pu.ID_Usuario = u.ID
+where pu.ID_Usuario = 2
+group by u.Nombre_Entrada
 
 
 --13 Indicar todos los programas con que interactúa un programa dado.
---se modifica la query ya que no existe la interaccion de un programa con otro:
---Indicar todos los programas que interactuan con la BD
-select p.* from Programas p 
-where p.Consulta_DBMS = 1
-
-
+select pLlama.Descripcion Programa, pLlamado.Descripcion Llamadas from Llamadas l
+inner join Programas pLlama on l.Fk_ID_Llama = pLlama.ID 
+inner join Programas pLlamado on l.Fk_ID_EsLlamado = pLlamado.ID
+where l.Fk_ID_Llama = pLlama.ID and l.Fk_ID_EsLlamado = pLlamado.ID
+group by pLlama.Descripcion, pLlamado.Descripcion
