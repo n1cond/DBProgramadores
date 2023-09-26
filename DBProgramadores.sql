@@ -10,32 +10,30 @@ go
 
 --creacion de tablas
 create table Programadores(
-	Nombre_Entrada varchar(60), --primary key,--unique not null, --probablemente esta debería ser la PK
-	Codigo varchar(40) not null,
-	primary key (Nombre_Entrada, Codigo)
+	ID int identity (1,1) primary key,
+	Nombre_Entrada varchar(60) unique not null,
+	Codigo varchar(40) not null
 );
 go
 
 create table LenguajesProgramacion(
 	ID int identity(1,1) primary key,
-	Nombre varchar(60)
+	Nombre varchar(60) unique not null
 );
 go
 
 create table Usuarios(
 	ID int identity(1,1) primary key,
-	Nombre_Entrada varchar(60),
+	Nombre_Entrada varchar(60) unique not null
 );
 go
 
 create table Programas(
 	ID int identity(1,1) primary key,
-	Descripcion varchar(60),
-	Num_Version varchar(20),
-	Fecha date,
-	Fk_Nombre_Entrada varchar(60) not null,
-	Fk_CodProgramador varchar(40) not null,
-	foreign key (Fk_Nombre_Entrada, Fk_CodProgramador) references Programadores (Nombre_Entrada, Codigo),
+	Descripcion varchar(60) not null,
+	Num_Version varchar(20) not null,
+	Fecha date not null,
+	Fk_ID_Programador int foreign key references Programadores(ID) not null,
 	Fk_ID_Lenguaje int foreign key references LenguajesProgramacion(ID) not null,
 	Consulta_DBMS bit
 );
@@ -44,13 +42,14 @@ go
 create table Llamadas(
 	Fk_ID_Llama int foreign key references Programas(ID) not null,
 	Fk_ID_EsLlamado int foreign key references Programas(ID) not null,
-	constraint ukID unique (Fk_ID_Llama, Fk_ID_EsLlamado)
+	primary key (Fk_ID_Llama, Fk_ID_EsLlamado)
 );
 go
 
 create table Prog_Usu(
 	ID_Programa int foreign key references Programas(ID) not null,
-	ID_Usuario int foreign key references Usuarios(ID) not null
+	ID_Usuario int foreign key references Usuarios(ID) not null,
+	primary key (ID_Programa, ID_Usuario)
 );
 go
 
@@ -99,7 +98,7 @@ join LenguajesProgramacion  ON Programas.Fk_ID_Lenguaje = LenguajesProgramacion.
 select * from Programas
 where fecha between '2022-01-01' and '2023-12-31'
 
---3 Listar todos los programas escritos en el lenguaje de programación de código=1.
+--3 Listar todos los programas escritos en el lenguaje de programaciÃ³n de cÃ³digo=1.
 select * from Programas
 where Fk_ID_Lenguaje = 1
 
@@ -127,7 +126,7 @@ inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
 where p.fecha between '2022-01-01' and '2023-12-31'
 group by l.Nombre, fecha
 
---8 Indicar la cantidad de programas, agrupados por programa que no están escritos en PASCAL.
+--8 Indicar la cantidad de programas, agrupados por programa que no estÃ¡n escritos en PASCAL.
 select l.nombre, count(*) total from Programas p
 inner join LenguajesProgramacion l on p.Fk_ID_Lenguaje = l.ID
 where l.Nombre <> 'Python'-- l.nombre not in ('pascal'), l.nombre not like '%pascal%'
@@ -163,7 +162,7 @@ where pu.ID_Usuario = 2
 group by u.Nombre_Entrada
 
 
---13 Indicar todos los programas con que interactúa un programa dado.
+--13 Indicar todos los programas con que interactÃºa un programa dado.
 select pLlama.Descripcion Programa, pLlamado.Descripcion Llamadas from Llamadas l
 inner join Programas pLlama on l.Fk_ID_Llama = pLlama.ID 
 inner join Programas pLlamado on l.Fk_ID_EsLlamado = pLlamado.ID
