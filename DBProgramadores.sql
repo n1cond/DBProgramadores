@@ -53,6 +53,56 @@ create table Prog_Usu(
 );
 go
 
+create procedure Programadores_Insert(@Nombre_Entrada varchar(60), @Codigo varchar(40))
+as begin
+	insert Programadores values(@Nombre_Entrada, @Codigo);
+	select @@IDENTITY;
+end
+
+create procedure LenguajesProgramacion_Insert(@Nombre varchar(60))
+	as begin
+	insert LenguajesProgramacion values(@Nombre)
+	select @@IDENTITY;
+end
+
+create procedure Usuarios_Insert(@Nombre varchar(60))
+	as begin
+	insert Usuarios values(@Nombre)
+	select @@IDENTITY;
+end
+
+create procedure Programas_Insert(
+	@Descripcion varchar(60), 
+	@Num_Version varchar(20), 
+	@Fecha date, 
+	@Fk_ID_Programador int,
+	@Fk_ID_Lenguaje int,
+	@Consulta_DBMS bit
+	)
+	as begin
+	insert Programas values(
+	@Descripcion, 
+	@Num_Version, 
+	@Fecha, 
+	@Fk_ID_Programador,
+	@Fk_ID_Lenguaje,
+	@Consulta_DBMS
+	)
+	select @@IDENTITY;
+end
+
+create procedure Llamadas_Insert(
+	@Fk_ID_Llama int,
+	@Fk_ID_EsLlamado int)
+	as begin
+	insert Llamadas values(@Fk_ID_Llama, @Fk_ID_EsLlamado)
+	end
+
+create procedure Prog_Usu_Insert(@ID_Programa int, @ID_Usuario int)
+	as begin
+	insert Prog_Usu values(@ID_Programa, @ID_Usuario)
+	end
+
 insert Programadores values('DanielaBallon', 'dani123');
 insert Programadores values('mtrescher', 'marce123');
 insert Programadores values('n1cond', 'nel123');
